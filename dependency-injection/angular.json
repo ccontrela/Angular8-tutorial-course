@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "demo-form-sku": {
+    "dependency-injection": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/demo-form-sku",
+            "outputPath": "dist/dependency-injection",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "demo-form-sku:build:production"
+              "browserTarget": "dependency-injection:build:production"
             },
             "development": {
-              "browserTarget": "demo-form-sku:build:development"
+              "browserTarget": "dependency-injection:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "demo-form-sku:build"
+            "browserTarget": "dependency-injection:build"
           }
         },
         "test": {
@@ -96,6 +96,6 @@
     }
   },
   "cli": {
-    "analytics": "2bd9754c-e082-4754-b339-813a6ee225e2"
+    "analytics": "7dc9212e-937f-4af4-afb3-3869325f4a56"
   }
 }
