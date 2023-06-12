@@ -20,7 +20,7 @@ export class AppComponent {
       new Product(
         'netojacket',
         'blue jackeT',
-        '/assets/images/products/black-hat.jpg', 
+        '/assets/images/products/blue-jacket.jpg', 
         ['women', 'Apparel', 'jackets & vests'], 238.99),
       new Product(
         'nicehat',
