@@ -3,17 +3,12 @@ import { Product } from '../product.model';
 
 @Component({
   selector: 'app-product-department',
-  templateUrl: './product-department.component.html',
-  styleUrls: ['./product-department.component.css']
+  templateUrl: './product-department.component.html'
 })
 export class ProductDepartmentComponent {
   @Input() product: Product
 
   constructor() {
-    this.product = new Product(
-      'MyShoes',
-      'black running  shoes',
-      '/assets/images/products/black-shoes.jpg', 
-      ['Men', 'shoes', 'running shoes'], 109.99);
+    this.product = new Product('', '', '', ['', '', ''], 0);
   }
 }

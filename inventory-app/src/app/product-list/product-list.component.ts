@@ -3,8 +3,7 @@ import { Product } from '../product.model';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  templateUrl: './product-list.component.html'
 })
 export class ProductListComponent {
   @Input() productlist: Product[];
@@ -15,12 +14,7 @@ export class ProductListComponent {
 
   constructor(){
     this.productlist = [];
-    this.currentProduct = new Product(
-      'MyShoes',
-      'black running  shoes',
-      '/assets/images/products/black-shoes.jpg', 
-      ['Men', 'shoes', 'running shoes'], 109.99);
-
+    this.currentProduct = new Product('', '', '', ['', '', ''], 0);
     this.onProductSelected = new EventEmitter();
   }
 

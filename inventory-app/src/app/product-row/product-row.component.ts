@@ -11,10 +11,6 @@ export class ProductRowComponent {
   @HostBinding('attr.class') cssClass = 'item';
 
   constructor() {
-    this.product = new Product(
-      'MyShoes',
-      'black running  shoes',
-      '/assets/images/products/black-shoes.jpg', 
-      ['Men', 'shoes', 'running shoes'], 109.99);
+    this.product = new Product('', '', '', ['', '', ''], 0);
   }
 }

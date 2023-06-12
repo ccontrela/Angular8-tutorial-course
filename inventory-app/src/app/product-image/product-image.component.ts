@@ -3,18 +3,15 @@ import { Product } from '../product.model';
 
 @Component({
   selector: 'app-product-image',
-  templateUrl: './product-image.component.html',
-  styleUrls: ['./product-image.component.css']
+  template: `
+    <img class="product-image" [src]="product.imageUrl"/>
+  `
 })
 export class ProductImageComponent {
   @Input() product: Product;
   @HostBinding('attr.class') cssClass = 'ui small image';
 
   constructor() {
-    this.product = new Product(
-      'MyShoes',
-      'black running  shoes',
-      '/assets/images/products/black-shoes.jpg', 
-      ['Men', 'shoes', 'running shoes'], 109.99);
+    this.product = new Product('', '', '', ['', '', ''], 0);
   }
 }
