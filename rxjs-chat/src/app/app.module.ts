@@ -13,6 +13,7 @@ import { ChatPageComponent } from './chat-page/chat-page.component';
 import { ChatMessageComponent } from './chat-message/chat-message.component';
 import { ChatNavBarComponent } from './chat-nav-bar/chat-nav-bar.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ChatWindowComponent } from './chat-window/chat-window.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [
     MessagesService, ThreadsService, UsersService

@@ -62,7 +62,6 @@ export class ChatExampleData {
   }
 
   static setupBots(messagesService: MessagesService): void {
-
     messagesService.messagesForThreadUser(tEcho, echo)
       .forEach((message: Message): void => {
         messagesService.addMessage(

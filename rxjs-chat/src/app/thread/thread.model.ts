@@ -16,6 +16,5 @@ import { uuid } from '../util/uuid';
      this.id = id || uuid();
      this.name = name || "";
      this.avatarSrc = avatarSrc || "";
-     this.lastMessage = new Message();
    }
  }
