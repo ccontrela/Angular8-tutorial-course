@@ -14,7 +14,7 @@ export class AppComponent {
 
   counter: number;
 
-  constructor(@Inject(AppStore) private store: Store<AppStore>){
+  constructor(@Inject(AppStore) private store: Store<AppState>){
     store.subscribe(() => this.readState());
     this.readState();
 
