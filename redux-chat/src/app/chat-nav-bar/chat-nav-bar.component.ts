@@ -18,7 +18,6 @@ export class ChatNavBarComponent {
   }
 
   updateState(){
-    console.log(this.store.getState().users);
     this.unreadMessagesCount = getUnreadMessagesCount(this.store.getState());
   }
 }

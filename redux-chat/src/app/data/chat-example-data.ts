@@ -120,8 +120,8 @@ export function ChatExampleData(store: Redux.Store<AppState>) {
   // depending on which thread the message was sent to, the bot will respond
   // in kind.
 
-  const handledMessages = {};
-
+  const handledMessages = {} as any;
+  
   store.subscribe( () => {
     getAllMessages(store.getState())
       // bots only respond to messages sent by the user, so
@@ -133,12 +133,15 @@ export function ChatExampleData(store: Redux.Store<AppState>) {
         // chat app. Every time there is a new message, we only want to keep the
         // new ones. This is a case where some sort of queue would be a better
         // model
+        console.log(handledMessages);
         
         if (handledMessages.hasOwnProperty(message.id)) {
           return;
         }
         handledMessages[message.id] = true;
 
+        console.log("message add");
+        console.log(message.id);
         switch (message.thread.id) {
           case tEcho.id:
             // echo back the same message to the user

@@ -4,13 +4,10 @@ import * as ThreadActions from './thread.action';
 
 import { Thread } from "./thread.model";
 import { Message } from "../message/message.model";
-import { AppState } from '../app.reducer';
-import { entries } from 'lodash';
-import { createCacheKeyComparator } from 'reselect/es/defaultMemoize';
 
 export interface ThreadsEntities {
     [id: string]: Thread;
-}
+};
 
 export interface ThreadsState {
     ids: string[];
@@ -19,9 +16,9 @@ export interface ThreadsState {
 };
 
 const initialState: ThreadsState = {
-    ids: [],
-    entities: {},
-    currentThreadId: null as any
+    ids: [],    
+    currentThreadId: null as any,
+    entities: {}
 }
 
 export const ThreadsReducer = 
@@ -52,7 +49,7 @@ export const ThreadsReducer =
                 const newMessage = Object.assign({}, message, { isRead: isRead });
 
                 const oldThread = state.entities[thread.id];
-                const newThrad = Object.assign({}, oldThread, {
+                const newThread = Object.assign({}, oldThread, {
                     messages: [...oldThread.messages, newMessage]
                 });
 
@@ -60,7 +57,7 @@ export const ThreadsReducer =
                     ids: state.ids,
                     currentThreadId: state.currentThreadId,
                     entities: Object.assign({}, state.entities, {
-                        [thread.id]: thread
+                        [thread.id]: newThread
                     })
                 };
             }
@@ -122,9 +119,10 @@ export const getUnreadMessagesCount = createSelector(
         },  0)
 );
 
+
 export const getAllMessages = createSelector(
     getAllThreads,
     (threads: Thread[]) => threads.reduce(
         (messages:  Message[], thread: Thread) => [...messages, ...thread.messages],
-        []).sort((m1: Message, m2: Message) => m1.sentAt.getTime() - m2.sentAt.getTime())
+        []).sort((m1: Message, m2: Message) => m1.sentAt?.getTime() - m2.sentAt?.getTime())
 );
