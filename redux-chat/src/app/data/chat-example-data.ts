@@ -1,113 +1,185 @@
-import { User } from '../user/user.model';
+import * as Redux from 'redux';
+import { AppState, getAllMessages } from '../app.reducer';
+import { uuid } from '../util/uuid';
+import * as moment from 'moment';
 import { Thread } from '../thread/thread.model';
-import { Message } from '../message/message.model';
-import { MessagesService } from '../message/messages.service';
-import { ThreadsService } from '../thread/threads.service';
-import { UsersService } from '../user/users.service';
+import * as ThreadActions from '../thread/thread.action';
+import { User } from '../user/user.model';
+import * as UserActions from '../user/user.action';
 
-const me: User = new User('Juliet', 'assets/images/avatars/female-avatar-1.png');
-const ladycap: User = new User('Lady Capulet', 'assets/images/avatars/female-avatar-2.png');
-const echo: User = new User('Echo Bot', 'assets/images/avatars/male-avatar-1.png');
-const rev: User = new User('Reverse Bot', 'assets/images/avatars/female-avatar-4.png');
-const wait: User = new User('Waiting Bot', 'assets/images/avatars/male-avatar-2.png');
+/**
+ * ChatExampleData sets up the initial data for our chats as well as
+ * configuring the "bots".
+ */
 
-const tLadycap: Thread = new Thread('tLadycap', ladycap.name, ladycap.avatarSrc);
-const tEcho: Thread = new Thread('tEcho', echo.name, echo.avatarSrc);
-const tRev: Thread = new Thread('tRev', rev.name, rev.avatarSrc);
-const tWait: Thread = new Thread('tWait', wait.name, wait.avatarSrc);
+// the person using the app is Juliet
+const me: User = {
+  id: uuid(),
+  isClient: true, // <-- notice we're specifying the client as this User
+  name: 'Juliet',
+  avatarSrc: 'assets/images/avatars/female-avatar-1.png'
+};
 
-const initialMessages: Message[] = [
-  new Message({
+const ladycap: User = {
+  id: uuid(),
+  name: 'Lady Capulet',
+  avatarSrc: 'assets/images/avatars/female-avatar-2.png'
+};
+
+const echo: User = {
+  id: uuid(),
+  name: 'Echo Bot',
+  avatarSrc: 'assets/images/avatars/male-avatar-1.png'
+};
+
+const rev: User = {
+  id: uuid(),
+  name: 'Reverse Bot',
+  avatarSrc: 'assets/images/avatars/female-avatar-4.png'
+};
+
+const wait: User = {
+  id: uuid(),
+  name: 'Waiting Bot',
+  avatarSrc: 'assets/images/avatars/male-avatar-2.png'
+};
+
+const tLadycap: Thread = {
+  id: 'tLadycap',
+  name: ladycap.name,
+  avatarSrc: ladycap.avatarSrc,
+  messages: []
+};
+
+const tEcho: Thread = {
+  id: 'tEcho',
+  name: echo.name,
+  avatarSrc: echo.avatarSrc,
+  messages: []
+};
+
+const tRev: Thread = {
+  id: 'tRev',
+  name: rev.name,
+  avatarSrc: rev.avatarSrc,
+  messages: []
+};
+
+const tWait: Thread = {
+  id: 'tWait',
+  name: wait.name,
+  avatarSrc: wait.avatarSrc,
+  messages: []
+};
+
+export function ChatExampleData(store: Redux.Store<AppState>) {
+
+  // set the current User
+  store.dispatch(UserActions.setCurrentUser(me));
+
+  // create a new thread and add messages
+  store.dispatch(ThreadActions.addThread(tLadycap));
+  store.dispatch(ThreadActions.addMessage(tLadycap, {
     author: me,
-    sentAt: new Date(Date.now() - 60000*45),
-    text: 'Yet let me weep for such a feeling loss.',
-    thread: tLadycap
-  }),
-  new Message({
+    sentAt: moment().subtract(45, 'minutes').toDate(),
+    text: 'Yet let me weep for such a feeling loss.'
+  }));
+  store.dispatch(ThreadActions.addMessage(tLadycap, {
     author: ladycap,
-    sentAt: new Date(Date.now() - 60000*20),
-    text: 'So shall you feel the loss, but not the friend which you weep for.',
-    thread: tLadycap
-  }),
-  new Message({
+    sentAt: moment().subtract(20, 'minutes').toDate(),
+    text: 'So shall you feel the loss, but not the friend which you weep for.'
+  }));
+
+  // create a few more threads
+  store.dispatch(ThreadActions.addThread(tEcho));
+  store.dispatch(ThreadActions.addMessage(tEcho, {
     author: echo,
-    sentAt: new Date(Date.now() - 60000*1),
-    text: `I\'ll echo whatever you send me`,
-    thread: tEcho
-  }),
-  new Message({
+    sentAt: moment().subtract(1, 'minutes').toDate(),
+    text: 'I\'ll echo whatever you send me'
+  }));
+
+  store.dispatch(ThreadActions.addThread(tRev));
+  store.dispatch(ThreadActions.addMessage(tRev, {
     author: rev,
-    sentAt: new Date(Date.now() - 60000*3),
-    text: `I\'ll reverse whatever you send me`,
-    thread: tRev
-  }),
-  new Message({
+    sentAt: moment().subtract(3, 'minutes').toDate(),
+    text: 'I\'ll reverse whatever you send me'
+  }));
+
+  store.dispatch(ThreadActions.addThread(tWait));
+  store.dispatch(ThreadActions.addMessage(tWait, {
     author: wait,
-    sentAt: new Date(Date.now() - 60000*4),
-    text: `I\'ll wait however many seconds you send to me before responding. Try sending '3'`,
-    thread: tWait
-  })
-];
+    sentAt: moment().subtract(4, 'minutes').toDate(),
+    text: `I\'ll wait however many seconds you send to me before responding.` +
+      ` Try sending '3'`
+  }));
 
-export class ChatExampleData {
+  // select the first thread
+  store.dispatch(ThreadActions.selectThread(tLadycap));
 
-  static init(messagesService: MessagesService,
-              threadsService: ThreadsService,
-              usersService: UsersService): void {
-    messagesService.messages.subscribe(() => ({}));
-    usersService.setCurrentUser(me);
-    initialMessages.map((message: Message) => messagesService.addMessage(message));
-    threadsService.setCurrentThread(tEcho);
-    this.setupBots(messagesService);
-  }
+  // Now we set up the "bots". We do this by watching for new messages and
+  // depending on which thread the message was sent to, the bot will respond
+  // in kind.
 
-  static setupBots(messagesService: MessagesService): void {
-    messagesService.messagesForThreadUser(tEcho, echo)
-      .forEach((message: Message): void => {
-        messagesService.addMessage(
-          new Message({
-            author: echo,
-            text: message.text,
-            thread: tEcho
-          })
-        );
-      },
-      null as any);
-    
-    messagesService.messagesForThreadUser(tRev, rev)
-      .forEach((message: Message): void => {
-        messagesService.addMessage(
-          new Message({
-            author: rev,
-            text: message.text.split('').reverse().join(''),
-            thread: tRev
-          })
-        );
-      },
-      null as any);
+  const handledMessages = {};
 
-    messagesService.messagesForThreadUser(tWait, wait)
-      .forEach((message: Message): void => {
-        let waitTime: number = parseInt(message.text, 10);
-        let reply: string;
-        if (isNaN(waitTime)) {
-          waitTime = 0;
-          reply = `I didn't understand ${message.text}. Try sending me a number`;
-        } else {
-          reply = `I waited ${waitTime} seconds to send you this.`;
+  store.subscribe( () => {
+    getAllMessages(store.getState())
+      // bots only respond to messages sent by the user, so
+      // only keep messages sent by the current user
+      .filter(message => message.author.id === me.id)
+      .map(message => {
+
+        // This is a bit of a hack and we're stretching the limits of a faux
+        // chat app. Every time there is a new message, we only want to keep the
+        // new ones. This is a case where some sort of queue would be a better
+        // model
+        
+        if (handledMessages.hasOwnProperty(message.id)) {
+          return;
         }
-        setTimeout(() => {
-          messagesService.addMessage(
-            new Message({
-              author: wait,
-              text: reply,
-              thread: tWait
-            })
-          );
-        },
-        waitTime*1000);
-      },
-      null as any);
-  }
+        handledMessages[message.id] = true;
 
+        switch (message.thread.id) {
+          case tEcho.id:
+            // echo back the same message to the user
+            store.dispatch(ThreadActions.addMessage(tEcho, {
+              author: echo,
+              text: message.text
+            }));
+
+            break;
+          case tRev.id:
+            // echo back the message reveresed to the user
+            store.dispatch(ThreadActions.addMessage(tRev, {
+              author: rev,
+              text: message.text.split('').reverse().join('')
+            }));
+
+            break;
+          case tWait.id:
+            let waitTime: number = parseInt(message.text, 10);
+            let reply: string;
+
+            if (isNaN(waitTime)) {
+              waitTime = 0;
+              reply = `I didn\'t understand ${message}. Try sending me a number`;
+            } else {
+              reply = `I waited ${waitTime} seconds to send you this.`;
+            }
+
+            setTimeout(
+              () => {
+                store.dispatch(ThreadActions.addMessage(tWait, {
+                  author: wait,
+                  text: reply
+                }));
+              },
+              waitTime * 1000);
+
+            break;
+          default:
+            break;
+        }
+      });
+  });
 }

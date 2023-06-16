@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ThreadsService } from '../thread/threads.service';
 import { Thread } from '../thread/thread.model';
 
 @Component({
@@ -10,21 +8,19 @@ import { Thread } from '../thread/thread.model';
 })
 export class ChatThreadComponent implements OnInit {
   @Input() thread: Thread;
-  seleted = false;
+  @Input() selected = false;
+  @Output() onThreadSelected: EventEmitter<Thread>;
 
-  constructor(public threadsService: ThreadsService){
-    this.thread = new Thread();
+  constructor(){
+    this.onThreadSelected = new EventEmitter<Thread>();
   }
 
   ngOnInit(): void {
-    this.threadsService.currentThread
-    .subscribe((currentThread: Thread) => {
-      this.seleted = currentThread && this.thread && (currentThread.id === this.thread.id);
-    });
+    
   }
 
   clicked(event: any): void {
-    this.threadsService.setCurrentThread(this.thread);
+    this.onThreadSelected.emit(this.thread);
     event.preventDefault();
   }
 }

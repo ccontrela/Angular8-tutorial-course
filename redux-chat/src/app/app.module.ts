@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { UsersService } from './user/users.service';
-import { ThreadsService } from './thread/threads.service';
-import { MessagesService } from './message/messages.service';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatThreadsComponent } from './chat-threads/chat-threads.component';
@@ -14,7 +10,9 @@ import { ChatMessageComponent } from './chat-message/chat-message.component';
 import { ChatNavBarComponent } from './chat-nav-bar/chat-nav-bar.component';
 import { ChatWindowComponent } from './chat-window/chat-window.component';
 import { FormsModule } from '@angular/forms';
+import { FromNowPipe } from './pipes/from-now.pipe';
 
+import { AppStore,  appStoreProviders } from './app.store';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +21,8 @@ import { FormsModule } from '@angular/forms';
     ChatPageComponent,
     ChatMessageComponent,
     ChatNavBarComponent,
-    ChatWindowComponent
+    ChatWindowComponent,
+    FromNowPipe
   ],
   imports: [
     BrowserModule,
@@ -31,7 +30,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [
-    MessagesService, ThreadsService, UsersService
+    appStoreProviders
   ],
   bootstrap: [AppComponent]
 })

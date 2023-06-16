@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { AppStore } from '../app.store';
+import * as Redux from 'redux';
 import { Thread } from '../thread/thread.model';
-import { ThreadsService } from '../thread/threads.service';
+import * as ThreadActions from '../thread/thread.action';
+import { AppState, getCurrentThread, getAllThreads } from '../app.reducer';
 
 @Component({
   selector: 'app-chat-threads',
@@ -9,9 +11,22 @@ import { ThreadsService } from '../thread/threads.service';
   styleUrls: ['./chat-threads.component.css']
 })
 export class ChatThreadsComponent {
-  threads: Observable<any>;
+  threads: Thread[];
+  currentThreadId: string;
 
-  constructor(public threadsService: ThreadsService) {
-    this.threads = threadsService.orderedThreads;
+  constructor(@Inject(AppStore) private store: Redux.Store<AppState>) {
+    store.subscribe(() => this.updateState());
+    this.updateState();
+  }
+
+  updateState(){
+    const state = this.store.getState();
+
+    this.threads = getAllThreads(state);
+    this.currentThreadId = getCurrentThread(state).id;
+  }
+
+  handleThreadClicked(thread: Thread) {
+    this.store.dispatch(ThreadActions.selectThread(thread));
   }
 }
